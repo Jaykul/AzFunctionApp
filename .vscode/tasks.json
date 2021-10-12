@@ -1,0 +1,57 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+        {
+            "label": "Analyzer",
+            "group": "test",
+            "type": "shell",
+            "command": "Invoke-ScriptAnalyzer",
+            "args": [
+                "-Path",
+                "(Get-Module Configuration -List | Sort Version -Desc | Select -First 1 -Expand ModuleBase)"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Gherkin",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "Invoke-Gherkin",
+            "args": [
+                "-Path",
+                "${workspaceFolder}\\Specs",
+                "-PesterOption",
+                "@{ IncludeVSCodeMarker = $True }",
+                "-CodeCoverage",
+                "(Convert-Path (Join-Path (Split-Path (Get-Module Configuration -List | Sort Version -Desc | Select -First 1 -Expand ModuleBase)) *.psm1))"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "type": "func",
+            "command": "host start",
+            "problemMatcher": "$func-powershell-watch",
+            "isBackground": true
+        }
+    ]
+}
